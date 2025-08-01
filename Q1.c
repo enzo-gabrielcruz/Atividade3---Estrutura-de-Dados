@@ -194,7 +194,7 @@ int main (){
                 fprintf(file_out, "%d ", altura_do_no_i);
 
 
-
+                
             }
             
             // Imprimindo no arquivo OUT    
