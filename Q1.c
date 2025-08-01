@@ -10,6 +10,7 @@ typedef struct arvB{
     struct arvB * esq;
     struct arvB * dir;
     int altura;
+    int usado; // 0 para elementos que já foram buscados e 1 para elementos livres para busca;
 }arvB;
 
 arvB * criar(int num){
@@ -83,9 +84,6 @@ int buscar_altura_de_um_no(arvB* raiz, int valor_procurado) {
     }
     return -1; // Não deveria acontecer se o valor foi inserido.
 }
-
-
-
 
 
 arvB* buscar_no_maximo(arvB* raiz) {
@@ -194,6 +192,9 @@ int main (){
             for (int i = 0; i < tam_vetor; i++) {
                 int altura_do_no_i = buscar_altura_de_um_no(raiz, vetor[i]);
                 fprintf(file_out, "%d ", altura_do_no_i);
+
+
+
             }
             
             // Imprimindo no arquivo OUT    
