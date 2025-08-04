@@ -19,6 +19,7 @@ arvB * criar(int num){
     novo->esq = NULL;
     novo->dir = NULL;
     novo->altura = 0;
+    novo->usado = 1;
     return novo;
 }
 
@@ -67,12 +68,12 @@ int valor_maximo (arvB * arv){
 }
 
 
-// FUNÇÃO NOVA: Busca por um valor e retorna a sua altura (profundidade)
 int buscar_altura_de_um_no(arvB* raiz, int valor_procurado) {
     arvB* atual = raiz;
     int altura = 0;
     while (atual != NULL) {
-        if (valor_procurado == atual->valor) {
+        if (valor_procurado == atual->valor && atual->usado == 1) {
+            atual->usado = 0;
             return altura; // Achou! Retorna a altura atual.
         }
         if (valor_procurado < atual->valor) {
@@ -82,7 +83,7 @@ int buscar_altura_de_um_no(arvB* raiz, int valor_procurado) {
         }
         altura++; // Incrementa a altura a cada passo.
     }
-    return -1; // Não deveria acontecer se o valor foi inserido.
+    return -1;
 }
 
 
@@ -182,7 +183,7 @@ int main (){
 
             arvB* no_max = buscar_no_maximo(raiz);
             int max_value = no_max ? no_max->valor : 0; // Pega o valor
-        
+
             arvB* pred_node = NULL;
             if (no_max != raiz) { // O nó raiz não tem predecessor neste contexto
             pred_node = buscar_pred_do_max(raiz, no_max);
