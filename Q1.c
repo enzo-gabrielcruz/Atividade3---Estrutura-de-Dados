@@ -132,16 +132,58 @@ void liberar_arvore(arvB *arv) {
     free(arv);
 }
 
+void remover_ultima_linha_em_branco(const char *file_out) { // função utilizada para apagar a última linha em branco
+    FILE *arquivo = fopen(file_out, "rb");
+    if (!arquivo) {
+        perror("Erro ao abrir arquivo para leitura");
+        return;
+    }
+
+    // Descobre tamanho do arquivo
+    fseek(arquivo, 0, SEEK_END);
+    long tamanho = ftell(arquivo);
+    rewind(arquivo);
+
+    // Lê todo o conteúdo
+    char *conteudo = malloc(tamanho + 1);
+    if (!conteudo) {
+        fclose(arquivo);
+        fprintf(stderr, "Erro de alocação\n");
+        return;
+    }
+
+    fread(conteudo, 1, tamanho, arquivo);
+    conteudo[tamanho] = '\0';
+    fclose(arquivo);
+
+    // Remove último \n se existir
+    if (tamanho > 0 && conteudo[tamanho - 1] == '\n') {
+        conteudo[tamanho - 1] = '\0';
+        tamanho--;
+    }
+
+    // Regrava o arquivo sem a última quebra de linha
+    arquivo = fopen(file_out, "wb");
+    if (!arquivo) {
+        perror("Erro ao abrir arquivo para escrita");
+        free(conteudo);
+        return;
+    }
+
+    fwrite(conteudo, 1, tamanho, arquivo);
+    fclose(arquivo);
+    free(conteudo);
+}
 
 int main (){
     FILE *file_in = fopen("L2Q1.in", "r");
     FILE *file_out = fopen("L2Q1.out", "w");
         if (!file_in) {
-            perror("Erro ao abrir L1Q1.in");
+            perror("Erro ao abrir L2Q1.in");
             return 1;
         }
         if (!file_out) {
-            perror("Erro ao abrir L1Q1.out");
+            perror("Erro ao abrir L2Q1.out");
             return 1;
         }
 
@@ -178,9 +220,6 @@ int main (){
                     adcionar(raiz,vetor[i]);
             } 
            
-            //int max_value = valor_maximo(raiz); // chave máxima;
-            //arvB* pred_node = buscar_predecessor(raiz, max_value);
-
             arvB* no_max = buscar_no_maximo(raiz);
             int max_value = no_max ? no_max->valor : 0; // Pega o valor
 
@@ -189,34 +228,14 @@ int main (){
             pred_node = buscar_pred_do_max(raiz, no_max);
             }
 
-            // IMPRIMINDO AS ALTURAS (NOVO JEITO)
+            // IMPRIMINDO AS ALTURAS
             for (int i = 0; i < tam_vetor; i++) {
                 int altura_do_no_i = buscar_altura_de_um_no(raiz, vetor[i]);
-                fprintf(file_out, "%d ", altura_do_no_i);
-
-
-                
+                fprintf(file_out, "%d ", altura_do_no_i);                
             }
             
-            // Imprimindo no arquivo OUT    
-            /*for (int i = 0; i < tam_vetor; i++) {
-                arvB *no = raiz;
-                while (no != NULL) {
-                    if (vetor[i] == no->valor) break; // procurando nó na ordem da linha pegando como base o vetor criado anteriormente
-        
-                    if (vetor[i] < no->valor) 
-                        no = no->esq;
-                    else 
-                        no = no->dir;
-            }
-                if (no)
-                    fprintf(file_out, "%d ",no->altura); // imprimindo altura
-        }*/
         fprintf(file_out, "max %d ", max_value); //MAX
-
-        // Altura nó de chave máxima
-        //int altura_chave = altura_chaveMax(raiz);
-        fprintf(file_out, "alt %d ", no_max->altura); // Altura chave máxima
+        fprintf(file_out, "alt %d ", no_max->altura); //Altura chave máxima
 
         if (pred_node)
             fprintf(file_out, "pred %d\n", pred_node->valor); // PRED
@@ -230,5 +249,7 @@ int main (){
 
     fclose(file_in);
     fclose(file_out);
-    //remover_ultima_linha_em_branco("L2Q2.out");
+    remover_ultima_linha_em_branco("L2Q1.out");
 }
+
+
