@@ -3,6 +3,8 @@
 #include <string.h>
 #include <ctype.h>
 
+// ENZO E JOÃO NETO
+
 #define LINE_MAX_SIZE 801 // máximo de caracteres presentes em uma linha
 
 typedef struct arvB{
